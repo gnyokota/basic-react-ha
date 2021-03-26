@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react'; 
-import {useParams, Link} from 'react-router-dom';
+import {useParams, useHistory} from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {makeStyles, Box, Grid, Typography, List, ListItem, ListItemText, Button} from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -53,9 +53,11 @@ function UserDetails() {
     //to avoid the problem with the initial true value using []
     //and the nested objects, a should use '' or false 
     const [user,setUser]= useState('');
+    const classes = useStyles();
 
     //use params from the url path :id
-    const { id }=useParams(); 
+    const { id }= useParams(); 
+    const history = useHistory(); 
 
     const url = `https://jsonplaceholder.typicode.com/users/${id}`;
    
@@ -69,12 +71,15 @@ function UserDetails() {
                 console.error(error.message);
             }
         }
-        // setTimeout(function(){
-                getIndividualData();
-        // },3000)
+        
+        getIndividualData();
+       
     },[url])
 
-    const classes = useStyles(); 
+    //history will avoid rendering the parent page when I go from children to parent 
+     const handleClick = () =>{
+        history.push('/'); 
+     }
 
     return (
         <div className='user-section'>
@@ -117,9 +122,9 @@ function UserDetails() {
                         </Grid>
                         {/* this grid area constains the button: */}
                         <Grid item lg={6} sm={12}>
-                            <Link to='/'className={classes.link} >
-                                <Button variant="contained" className={classes.button} startIcon={<ArrowBackIosIcon/>}>BACK TO LIST</Button>
-                            </Link>
+                            {/* <History to='/'className={classes.link} > */}
+                                <Button variant="contained" className={classes.button} startIcon={<ArrowBackIosIcon/>} onClick={handleClick}>BACK TO LIST</Button>
+                            {/* </History> */}
                         </Grid>
                     </Box>
                 ): 
